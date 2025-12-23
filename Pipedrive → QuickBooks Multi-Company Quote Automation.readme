@@ -1,0 +1,81 @@
+# Pipedrive to QuickBooks Quote Automation
+
+## Overview
+This Make.com automation creates QuickBooks **Estimates (Quotes)** directly from **Pipedrive Deals**, supporting a **multi-company QuickBooks setup** and enforcing the correct **Customer → Job → Estimate** hierarchy.
+
+The solution prevents duplicate records and applies company-specific quote numbering automatically.
+
+---
+
+## Tech Stack
+- Make.com
+- Pipedrive CRM
+- QuickBooks Online
+
+---
+
+## Business Units Supported
+| Business Unit | QuickBooks Company | Quote Prefix |
+|--------------|-------------------|--------------|
+| Company A | Company A | A- |
+| Company B | Company B | B- |
+| Company C | Company C | C- |
+
+---
+
+## High-Level Flow
+1. Deal reaches Quote stage in Pipedrive
+2. Business Unit determines QuickBooks company
+3. Search for existing Customer (Parent)
+4. Search for existing Job (Sub-customer)
+5. Conditional creation of missing records
+6. Create QuickBooks Estimate
+7. Update Pipedrive Deal & Organisation
+
+---
+
+## Core Logic
+
+### Customer Search
+- Searches QuickBooks by **Display Name**
+- Determines whether the Parent Customer already exists
+
+### Job (Sub-customer) Search
+- Searches QuickBooks by **Deal Title / Site Address**
+- Validates `Job = true`
+- Links to Parent via `ParentRef`
+
+---
+
+## Router Conditions
+
+### Parent Exists + Job Exists
+- Create Estimate
+
+### Parent Exists + Job Missing
+- Create Job
+- Create Estimate
+
+### Parent Missing
+- Create Customer
+- Create Job
+- Create Estimate
+
+---
+
+## QuickBooks Rules Enforced
+- Display Name is mandatory
+- Title field left empty (max 16-character limit)
+- Long addresses mapped safely to Display Name
+- Estimates are always created against Jobs (sub-customers)
+
+---
+
+## Outcome
+- Zero duplicate customers or jobs
+- Accurate multi-company accounting
+- Consistent quote numbering
+- Production-ready and scalable
+
+---
+
